@@ -62,7 +62,7 @@ class Crawler:
                 for url in self.external_urls:
                     file.write(url + "\n")
 
-crawler = Crawler("https://thehybridathlete.com")
+crawler = Crawler("https://example.com")
 crawler.crawl_all()
 crawler.save()
 print("Total Internal links:", len(crawler.internal_urls))
