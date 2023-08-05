@@ -62,7 +62,7 @@ class Crawler:
                 for url in self.external_urls:
                     file.write(url + "\n")
 
-if __name == '__main__':
+if __name__ == '__main__':
     # make sure the url enteres does not have a trailing /
     crawler = Crawler("https://example.com")
     crawler.crawl_all()
