@@ -14,11 +14,20 @@ class Crawler:
         parsed = urlparse(url)
         return bool(parsed.netloc) and bool(parsed.scheme)
 
+    def verify_word_in_url(self, word, url):
+        pattern = r"(https?://)(\w+\.)+\w+(/\S*)?"
+        match = re.search(pattern, url)
+        if match:
+            url_without_protocol = match.group(0)[len(match.group(1)):]
+            domain = url_without_protocol.split('/')[0]
+            return word in domain
+        return False
+    
     def classify(self, url):
         base_domain = self.base_url.replace("https://", "").replace("http://", "")
         tld = re.search(r"\.[a-zA-Z]{2,}$", base_domain).group()
         base_domain = base_domain.replace(tld, "")
-        if base_domain in url:
+        if self.verify_word_in_url(base_domain, url):
             self.internal_urls.add(url)
         else:
             self.external_urls.add(url)
