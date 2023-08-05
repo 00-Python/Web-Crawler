@@ -62,8 +62,10 @@ class Crawler:
                 for url in self.external_urls:
                     file.write(url + "\n")
 
-crawler = Crawler("https://example.com")
-crawler.crawl_all()
-crawler.save()
-print("Total Internal links:", len(crawler.internal_urls))
-print("Total External links:", len(crawler.external_urls))
+if __name == '__main__':
+    # make sure the url enteres does not have a trailing /
+    crawler = Crawler("https://example.com")
+    crawler.crawl_all()
+    crawler.save()
+    print("Total Internal links:", len(crawler.internal_urls))
+    print("Total External links:", len(crawler.external_urls))
