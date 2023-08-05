@@ -48,8 +48,8 @@ def crawl_and_save(base_url):
                 file.write(url + "\n")
     
 
-
-# replace with the url you want to crawl
-crawl_and_save("https://facebook.com")
-print("Total Internal links:", len(internal_urls))
-print("Total External links:", len(external_urls))
+if __name__ == '__main__':
+    # replace with the url you want to crawl
+    crawl_and_save("https://facebook.com")
+    print("Total Internal links:", len(internal_urls))
+    print("Total External links:", len(external_urls))
