@@ -24,8 +24,8 @@ class Crawler:
         return False
     
     def classify(self, url):
-        base_domain = self.base_url.replace("https://", "").replace("http://", "")
-        tld = re.search(r"\.[a-zA-Z]{2,}$", base_domain).group()
+        base_domain = self.clean_url
+        tld = re.search(r"\.[a-zA-Z]{2,}.*$", base_domain).group()
         base_domain = base_domain.replace(tld, "")
         if self.verify_word_in_url(base_domain, url):
             self.internal_urls.add(url)
@@ -34,7 +34,10 @@ class Crawler:
 
     def crawl(self, url):
         response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        if url.endswith('.xml'):
+            soup = BeautifulSoup(response.content, 'lxml-xml')  # need to run pip install lxml for this to work 
+        else:
+            soup = BeautifulSoup(response.text, 'html.parser')
         for a_tag in soup.findAll("a"):
             href = a_tag.attrs.get("href")
             if href == "" or href is None:
@@ -52,19 +55,20 @@ class Crawler:
             self.crawl(link)
 
     def save(self):
+        if "/" in self.clean_url:
+            save_url = self.clean_url.replace("/", "")
         if len(self.internal_urls) != 0:
-            with open(f"internal_{self.clean_url}.txt", "w") as file:
+            with open(f"internal_{save_url}.txt", "w") as file:
                 for url in self.internal_urls:
                     file.write(url + "\n")
         
         if len(self.external_urls) != 0:
-            with open(f"external_{self.clean_url}.txt", "w") as file:
+            with open(f"external_{save_url}.txt", "w") as file:
                 for url in self.external_urls:
                     file.write(url + "\n")
 
 if __name__ == '__main__':
-    # make sure the url enteres does not have a trailing /
-    crawler = Crawler("https://example.com")
+    crawler = Crawler("https://example.com/")
     crawler.crawl_all()
     crawler.save()
     print("Total Internal links:", len(crawler.internal_urls))
