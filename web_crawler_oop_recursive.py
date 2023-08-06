@@ -56,7 +56,10 @@ class Crawler:
 
     def save(self):
         if "/" in self.clean_url:
-            save_url = self.clean_url.replace("/", "")
+            save_url = self.clean_url.replace("/", "-")
+        else:
+            save_url = self.clean_url
+
         if len(self.internal_urls) != 0:
             with open(f"internal_{save_url}.txt", "w") as file:
                 for url in self.internal_urls:
@@ -68,7 +71,7 @@ class Crawler:
                     file.write(url + "\n")
 
 if __name__ == '__main__':
-    crawler = Crawler("https://example.com/")
+    crawler = Crawler("https://example.org")
     crawler.crawl_all()
     crawler.save()
     print("Total Internal links:", len(crawler.internal_urls))
